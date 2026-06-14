@@ -12,7 +12,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
-const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173,http://localhost:5174,http://localhost:5175")
+const allowedOrigins = (process.env.CLIENT_URL || "http://localhost:5173,http://localhost:5174,http://localhost:5175")
   .split(",")
   .map((origin) => origin.trim());
 
@@ -22,7 +22,8 @@ app.use(
     origin(origin, callback) {
       if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
       callback(new Error(`Origin ${origin} is not allowed by CORS`));
-    }
+    },
+    credentials: true  // ✅ Add this line
   })
 );
 app.use(express.json({ limit: "2mb" }));
@@ -39,4 +40,4 @@ app.use((err, _req, res, _next) => {
 });
 
 await connectDb();
-app.listen(port, () => console.log(`CoMS API running on http://localhost:${port}`));
+app.listen(port, () => console.log(`✅CoMS API running on http://localhost:${port}`));
