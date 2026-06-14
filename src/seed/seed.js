@@ -90,13 +90,14 @@ const employees = await Employee.insertMany([
   }
 ]);
 
-const users = await User.insertMany([
-  { company, name: "System Admin", email: "admin@coms.local", password: "Password123!", role: "SUPER_ADMIN" },
-  { company, name: "Martha Phiri", email: "hr@coms.local", password: "Password123!", role: "HR_MANAGER", employee: employees[0]._id },
-  { company, name: "Brian Mwansa", email: "pm@coms.local", password: "Password123!", role: "PROJECT_MANAGER", employee: employees[1]._id },
-  { company, name: "Grace Banda", email: "accounts@coms.local", password: "Password123!", role: "ACCOUNTS_OFFICER", employee: employees[2]._id },
-  { company, name: "Kelvin Sakala", email: "supervisor@coms.local", password: "Password123!", role: "SITE_SUPERVISOR", employee: employees[3]._id },
-  { company, name: "Employee Demo", email: "employee@coms.local", password: "Password123!", role: "EMPLOYEE", employee: employees[3]._id }
+// ✅ Using User.create() individually so pre('save') hook fires and passwords get hashed
+const users = await Promise.all([
+  User.create({ company, name: "System Admin", email: "admin@coms.local", password: "Password123!", role: "SUPER_ADMIN" }),
+  User.create({ company, name: "Martha Phiri", email: "hr@coms.local", password: "Password123!", role: "HR_MANAGER", employee: employees[0]._id }),
+  User.create({ company, name: "Brian Mwansa", email: "pm@coms.local", password: "Password123!", role: "PROJECT_MANAGER", employee: employees[1]._id }),
+  User.create({ company, name: "Grace Banda", email: "accounts@coms.local", password: "Password123!", role: "ACCOUNTS_OFFICER", employee: employees[2]._id }),
+  User.create({ company, name: "Kelvin Sakala", email: "supervisor@coms.local", password: "Password123!", role: "SITE_SUPERVISOR", employee: employees[3]._id }),
+  User.create({ company, name: "Employee Demo", email: "employee@coms.local", password: "Password123!", role: "EMPLOYEE", employee: employees[3]._id }),
 ]);
 
 const projects = await Project.insertMany([
@@ -190,5 +191,15 @@ await Timesheet.insertMany([
   { company, employee: employees[1]._id, project: projects[0]._id, date: "2026-06-10", normalHours: 8, overtimeHours: 0, status: "Approved", approvedBy: users[2]._id }
 ]);
 
-console.log("Seed complete. Login with admin@coms.local / Password123!");
+console.log("✅ Seed complete!");
+console.log("----------------------------");
+console.log("Login credentials:");
+console.log("  admin@coms.local     / Password123!  (Super Admin)");
+console.log("  hr@coms.local        / Password123!  (HR Manager)");
+console.log("  pm@coms.local        / Password123!  (Project Manager)");
+console.log("  accounts@coms.local  / Password123!  (Accounts Officer)");
+console.log("  supervisor@coms.local / Password123! (Site Supervisor)");
+console.log("  employee@coms.local  / Password123!  (Employee)");
+console.log("----------------------------");
+
 await mongoose.disconnect();
