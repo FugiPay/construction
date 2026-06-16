@@ -90,14 +90,14 @@ const employees = await Employee.insertMany([
   }
 ]);
 
-// ✅ Using User.create() individually so pre('save') hook fires and passwords get hashed
+// ✅ User.create() triggers pre('save') so passwords are properly hashed
 const users = await Promise.all([
-  User.create({ company, name: "System Admin", email: "admin@coms.local", password: "Password123!", role: "SUPER_ADMIN" }),
-  User.create({ company, name: "Martha Phiri", email: "hr@coms.local", password: "Password123!", role: "HR_MANAGER", employee: employees[0]._id }),
-  User.create({ company, name: "Brian Mwansa", email: "pm@coms.local", password: "Password123!", role: "PROJECT_MANAGER", employee: employees[1]._id }),
-  User.create({ company, name: "Grace Banda", email: "accounts@coms.local", password: "Password123!", role: "ACCOUNTS_OFFICER", employee: employees[2]._id }),
-  User.create({ company, name: "Kelvin Sakala", email: "supervisor@coms.local", password: "Password123!", role: "SITE_SUPERVISOR", employee: employees[3]._id }),
-  User.create({ company, name: "Employee Demo", email: "employee@coms.local", password: "Password123!", role: "EMPLOYEE", employee: employees[3]._id }),
+  User.create({ company, name: "System Admin",   email: "admin@coms.local",      password: "Password123!", role: "SUPER_ADMIN" }),
+  User.create({ company, name: "Martha Phiri",   email: "hr@coms.local",         password: "Password123!", role: "HR_MANAGER",       employee: employees[0]._id }),
+  User.create({ company, name: "Brian Mwansa",   email: "pm@coms.local",         password: "Password123!", role: "PROJECT_MANAGER",  employee: employees[1]._id }),
+  User.create({ company, name: "Grace Banda",    email: "accounts@coms.local",   password: "Password123!", role: "ACCOUNTS_OFFICER", employee: employees[2]._id }),
+  User.create({ company, name: "Kelvin Sakala",  email: "supervisor@coms.local", password: "Password123!", role: "SITE_SUPERVISOR",  employee: employees[3]._id }),
+  User.create({ company, name: "Employee Demo",  email: "employee@coms.local",   password: "Password123!", role: "EMPLOYEE",         employee: employees[3]._id }),
 ]);
 
 const projects = await Project.insertMany([
@@ -130,9 +130,9 @@ const projects = await Project.insertMany([
 ]);
 
 await Expense.insertMany([
-  { company, project: projects[0]._id, expenseCategory: "Material", description: "Cement and blocks", amount: 182000, expenseDate: "2026-02-03", recordedBy: users[3]._id },
-  { company, project: projects[0]._id, expenseCategory: "Fuel", description: "Tipper truck diesel", amount: 26500, expenseDate: "2026-02-12", recordedBy: users[3]._id },
-  { company, project: projects[1]._id, expenseCategory: "Subcontract", description: "Electrical contractor", amount: 118000, expenseDate: "2026-01-22", recordedBy: users[3]._id }
+  { company, project: projects[0]._id, expenseCategory: "Material",    description: "Cement and blocks",       amount: 182000, expenseDate: "2026-02-03", recordedBy: users[3]._id },
+  { company, project: projects[0]._id, expenseCategory: "Fuel",        description: "Tipper truck diesel",     amount: 26500,  expenseDate: "2026-02-12", recordedBy: users[3]._id },
+  { company, project: projects[1]._id, expenseCategory: "Subcontract", description: "Electrical contractor",   amount: 118000, expenseDate: "2026-01-22", recordedBy: users[3]._id }
 ]);
 
 await Asset.insertMany([
@@ -147,7 +147,7 @@ await Asset.insertMany([
     status: "Assigned",
     currentLocation: "Chilenje Site",
     assignments: [{ project: projects[0]._id, assignedFrom: "2026-01-16", assignedBy: users[2]._id }],
-    fuelLogs: [{ project: projects[0]._id, fuelDate: "2026-02-12", litres: 120, cost: 26500, recordedBy: users[4]._id }]
+    fuelLogs:    [{ project: projects[0]._id, fuelDate: "2026-02-12", litres: 120, cost: 26500, recordedBy: users[4]._id }]
   },
   {
     company,
@@ -174,15 +174,15 @@ await LeaveRequest.create({
 });
 
 await Payroll.insertMany(
-  employees.map((employee) => ({
+  employees.map((e) => ({
     company,
-    employee: employee._id,
+    employee: e._id,
     month: "June",
     year: 2026,
-    basicSalary: employee.salary,
+    basicSalary: e.salary,
     allowances: 1200,
     deductions: 900,
-    paymentStatus: employee.employeeCode === "EMP-004" ? "Unpaid" : "Paid"
+    paymentStatus: e.employeeCode === "EMP-004" ? "Unpaid" : "Paid"
   }))
 );
 
@@ -192,14 +192,14 @@ await Timesheet.insertMany([
 ]);
 
 console.log("✅ Seed complete!");
-console.log("----------------------------");
+console.log("────────────────────────────────────────");
 console.log("Login credentials:");
-console.log("  admin@coms.local     / Password123!  (Super Admin)");
-console.log("  hr@coms.local        / Password123!  (HR Manager)");
-console.log("  pm@coms.local        / Password123!  (Project Manager)");
-console.log("  accounts@coms.local  / Password123!  (Accounts Officer)");
-console.log("  supervisor@coms.local / Password123! (Site Supervisor)");
-console.log("  employee@coms.local  / Password123!  (Employee)");
-console.log("----------------------------");
+console.log("  admin@coms.local       / Password123!  (Super Admin)");
+console.log("  hr@coms.local          / Password123!  (HR Manager)");
+console.log("  pm@coms.local          / Password123!  (Project Manager)");
+console.log("  accounts@coms.local    / Password123!  (Accounts Officer)");
+console.log("  supervisor@coms.local  / Password123!  (Site Supervisor)");
+console.log("  employee@coms.local    / Password123!  (Employee)");
+console.log("────────────────────────────────────────");
 
 await mongoose.disconnect();

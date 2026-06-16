@@ -1,0 +1,18 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  CoMS Server — Environment Variables
+#  Copy this to server/src/.env and fill in real values.
+#  NEVER commit .env to git.
+# ─────────────────────────────────────────────────────────────────────────────
+
+PORT=5004
+NODE_ENV=development
+
+# MongoDB Atlas — rotate credentials at:
+# https://cloud.mongodb.com/v2/6895596ff7429101f1cd5ebc#/security/database
+MONGO_URI=mongodb+srv://<user>:<password>@cluster0.vaptgg7.mongodb.net/construction?appName=Cluster0
+
+# Generate a strong secret:  node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
+JWT_SECRET=REPLACE_WITH_64_CHAR_RANDOM_STRING
+
+# Comma-separated allowed frontend origins (no trailing slashes)
+CLIENT_ORIGIN=http://localhost:5173,http://localhost:5174,http://localhost:5175,https://construction-p9uq.onrender.com
